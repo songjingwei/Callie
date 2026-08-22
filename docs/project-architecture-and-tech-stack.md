@@ -1,11 +1,13 @@
 # AI 主动式外语学习 App：项目拆分与技术栈规划
 
-> 文档版本：v1.4  
+> 文档版本：v1.7  
 > 更新时间：2026-08-23
 
 ## 1. 文档目的
 
 本文档记录 AI 主动式外语学习 App 的工程拆分方式、各模块职责、推荐技术栈以及推荐开发顺序。
+
+> **系统架构图**（流程图、序列图、部署图、ER 图）见独立文档：[architecture.md](./architecture.md)
 
 核心理念：
 
@@ -53,7 +55,7 @@ App 采用类似微信的 IM 交互形式，但核心不是传统聊天，而是
 | AI 能力提供方 | **Callie 服务端** | 用户无需配置 Key；体验像正常 App |
 | API Key 存放 | **Workers Secrets / 服务端** | 永不下发客户端，消除 Key 信任问题 |
 | 用户付费 | **StoreKit 充值（通话额度）** | iOS 原生支付；可扩展订阅包 |
-| Phase 0 语音 | **Workers 签发 Realtime 临时 Token** | 实时双工 + 服务端计量扣费 |
+| Phase 0 语音 | **Workers 签发 UserSig + StartAIConversation** | 实时双工 + 服务端计量扣费 |
 | Phase 1+ 语音 | **Fly.io Python Voice Agent**（可选） | 更可控的 STT/LLM/TTS 管道 |
 
 核心原则：
@@ -70,11 +72,11 @@ iOS POST /v1/calls/start（Supabase JWT）
    ↓
 Workers：查 user_wallets 余额 → 不足则拒绝
    ↓
-Workers：用平台 Key 向 OpenAI 申请 Realtime 临时 Token（ephemeral）
+Workers：生成 UserSig + LlmProvider.toTrtcLlmConfig() + StartAIConversation
    ↓
-返回临时 Token 给 iOS（非 API Key，短时效）
+返回 sdkAppId / roomId / userId / userSig 给 iOS（非 SecretKey，短时效）
    ↓
-iOS WebRTC 连 OpenAI Realtime → 实时双工通话
+iOS TRTC SDK 进房 → 与 AI Bot 实时双工通话
    ↓
 挂断 → iOS POST /v1/calls/end（时长 / usage）
    ↓
@@ -92,7 +94,7 @@ Workers：扣减额度 + 写 usage_logs + 异步生成 learning summary
 > **主动来电（PushKit + CallKit + Scheduler）不能砍。**  
 > **实时双工语音不能降级为回合制。**  
 > **AI 由服务端提供；开发者先垫付 API 成本，用户充值覆盖。**  
-> **Phase 0 用 Workers 签发 Realtime 临时 Token，暂不上独立 Python Agent，控制基础设施成本。**
+> **Phase 0 用腾讯云 TRTC · AI 实时对话，暂不上独立 Python Agent，控制基础设施成本。**
 
 ### Phase 0 vs 完整版
 
@@ -102,10 +104,10 @@ Workers：扣减额度 + 写 usage_logs + 异步生成 learning summary
 | **Scheduler** | Cloudflare Workers Cron | + LLM 智能 Proactive Engine |
 | **Backend** | **Cloudflare Workers**（API + Cron + Push + 计费） | + Fly.io Voice Agent |
 | **Auth** | Supabase Auth 免费档 | 同左 |
-| **AI 能力** | **服务端 Realtime 临时 Token** | 完整 Voice Agent 服务 |
-| **API Key** | Workers Secrets（平台代持） | 同左 + 密钥轮换 |
+| **AI 能力** | **TRTC AI + LlmProvider（OpenAI / Anthropic 兼容）** | 完整 Voice Agent 服务 |
+| **API Key** | Workers Secrets（TRTC + LLM，平台代持） | 同左 + 密钥轮换 |
 | **用户付费** | **StoreKit 充值 → 通话额度** | + 订阅包（月含 N 分钟） |
-| **语音对话** | ✅ OpenAI Realtime（服务端签发） | Agora + 自托管 Agent（可选） |
+| **语音对话** | ✅ 腾讯云 TRTC AI（UserSig + AI Bot 进房） | 自托管 Agent（可选） |
 | **Voice Agent** | Workers 编排（轻量） | Python + LiveKit Agents |
 | **Memory / 画像** | SwiftData + Supabase 通话记录 | + pgvector |
 | **监控** | ❌ 暂不上 | Sentry + PostHog |
@@ -114,32 +116,34 @@ Workers：扣减额度 + 写 usage_logs + 异步生成 learning summary
 
 回合制**不像接电话**；Phase 0 必须 **实时双工**。
 
-**推荐 — 服务端签发 OpenAI Realtime Ephemeral Token**
+**推荐 — 腾讯云 TRTC · AI 实时对话**
 
 ```text
 CallKit 接听
    ↓
 Workers /v1/calls/start（校验额度）
    ↓
-平台 Key → OpenAI 创建 ephemeral session
+Workers：生成 UserSig + LlmProvider → StartAIConversation（LLMConfig 注入 Sarah 人设）
    ↓
-iOS 拿临时 Token 建 WebRTC（客户端无 API Key）
+iOS TRTC SDK 进房（客户端无 SecretKey / LLM Key）
    ↓
-实时 speech-to-speech（可打断）
+用户 ↔ TRTC 房间 ↔ AI Bot（STT → LLM → TTS，可打断）
    ↓
 挂断 → Workers 扣费 + 生成 feedback
 ```
 
 | 优点 | 说明 |
 |---|---|
-| 像真电话 | Realtime 原生双工 |
+| 像真电话 | TRTC 低延迟 RTC + AI 实时对话 |
+| 国内可付费 | 腾讯云 **支付宝** 充值；约 1 万分钟/月免费包 |
 | 用户信任 | 不填 Key、不担心被偷 |
 | 可计费 | 服务端掌握 session 起止与用量 |
+| iOS 省心 | 官方 TRTC SDK，比自研 WebSocket 音频层稳 |
 | Phase 0 够轻 | 不必先部署 Python Agent |
 
-**Phase 1+ 备选 — Fly.io Python Voice Agent + Agora**
+**Phase 1+ 备选 — Fly.io Python Voice Agent**
 
-适合要换模型、自控 prompt、或 OpenAI Realtime 成本过高时迁移。
+适合要完全自控管道、或多模型路由时迁移；TRTC 仍可作为 RTC 层保留。
 
 **不推荐回合制作为默认方案。**
 
@@ -151,7 +155,7 @@ iOS 拿临时 Token 建 WebRTC（客户端无 API Key）
 | Backend | Cloudflare Workers Free | **$0** |
 | 数据库 | Supabase Free | **$0** |
 | VoIP Push | Workers → APNs | **$0** |
-| **AI API** | **平台 Key，按用户通话量计费** | **变动**（用户充值覆盖） |
+| **AI API** | **腾讯云 TRTC + 国内 LLM，按通话量计费** | **变动**（用户充值覆盖；开发期可用免费包） |
 | Voice Agent 服务器 | Phase 0 不需要 | **$0** |
 | **固定合计** | | **~$8/月 + AI 浮动** |
 
@@ -162,7 +166,7 @@ iOS 拿临时 Token 建 WebRTC（客户端无 API Key）
 ```text
 iOS App (SwiftUI)
 ├── CallKit + PushKit
-├── Realtime 通话（临时 Token，无 API Key）
+├── TRTC 通话（UserSig，无 SecretKey）
 ├── StoreKit 充值
 └── SwiftData（本地缓存）
 
@@ -173,8 +177,8 @@ Supabase Free
 Cloudflare Workers
 ├── REST API（通话 / 计费 / 偏好）
 ├── Cron Scheduler + VoIP Push
-├── 签发 Realtime ephemeral token
-└── Secrets：OPENAI_API_KEY, APNS_*, SUPABASE_*
+├── UserSig + StartAIConversation
+└── Secrets：TRTC_*, TENCENT_*, LLM_*, APNS_*, SUPABASE_*
 
 Phase 0 不做：
 ✗ 客户端 BYOK
@@ -245,10 +249,10 @@ AI Language Learning
 │      PushKit VoIP + CallKit 来电
 │
 ├── 05. rtc
-│      实时语音（Phase 0: OpenAI Realtime；P1+: Agora SDK）
+│      实时语音（Phase 0: 腾讯云 TRTC SDK；P1+: 可选自托管 Agent）
 │
 ├── 06. voice-agent
-│      AI 语音（Phase 0: Workers Realtime；P1+: Python Agent）
+│      AI 语音（Phase 0: Workers + TRTC AI；P1+: Python Agent）
 │
 ├── 07. conversation
 │      AI 对话引擎
@@ -283,17 +287,17 @@ AI Language Learning
 | **iOS 架构** | MVVM + `@Observable` | 同左 |
 | **iOS 本地存储** | SwiftData + Keychain | + iCloud 同步（可选） |
 | **来电体验** | CallKit + PushKit | 同左 |
-| **iOS 音频** | AVAudioSession + OpenAI Realtime WebRTC | + Agora SDK（可选） |
-| **AI 能力** | **服务端提供**（Workers 编排） | Fly.io Voice Agent |
-| **API Key** | Workers Secrets，不下发客户端 | 密钥轮换 / 多模型 |
+| **iOS 音频** | AVAudioSession + **TRTC iOS SDK** | 同左 |
+| **AI 能力** | **服务端提供**（Workers + TRTC AI） | Fly.io Voice Agent |
+| **API Key** | Workers Secrets（TRTC + LLM），不下发客户端 | 密钥轮换 / 多模型 |
 | **用户付费** | StoreKit → 通话额度（credits） | + 订阅包 |
-| **LLM / 语音** | OpenAI Realtime（平台 Key + 临时 Token） | 可选 Agora + 自托管管道 |
+| **LLM / 语音** | **TRTC AI + LlmProvider 适配层** | 可选自托管管道 |
 | **Backend** | **Cloudflare Workers**（API + Cron + Push + 计费） | + Fly.io Voice Agent |
 | **Database** | Supabase PostgreSQL | 扩容 |
 | **Scheduler** | Workers Cron | + LLM 决策 |
 | **Push** | Workers → APNs | + Queues |
-| **RTC / 实时语音** | Realtime ephemeral token（WebRTC） | Agora / LiveKit + Agent |
-| **Voice Agent** | Workers 轻量编排 | Python + LiveKit Agents |
+| **RTC / 实时语音** | **TRTC SDK 进房 + AI Bot** | 自托管 Agent（可选） |
+| **Voice Agent** | Workers StartAIConversation | Python + LiveKit Agents |
 | **Memory** | SwiftData 本地 | pgvector |
 | **Realtime IM** | ❌ 不做 | Supabase Realtime |
 | **Cache / Queue** | ❌ 不做 | Redis + BullMQ |
@@ -424,7 +428,7 @@ CallKit 展示系统来电界面
    ↓
 用户点击「接听」
    ↓
-App 进入实时通话（OpenAI Realtime WebRTC）
+App 进入实时通话（TRTC SDK 进房 + AI Bot）
 ```
 
 Phase 0 必须实现：
@@ -440,8 +444,8 @@ CallKit 集成要点：
 
 - `CXProvider` 注册来电
 - `CXCallController` 处理接听/拒接/挂断
-- Phase 0：接听 → `/v1/calls/start` 拿 Realtime 临时 Token → WebRTC
-- Phase 1+：可选 Agora + Fly.io Voice Agent
+- Phase 0：接听 → `/v1/calls/start` 拿 UserSig + roomId → TRTC SDK 进房
+- Phase 1+：可选 Fly.io 自托管 Voice Agent
 - 拒接/未接 → 经 Workers API 写入 Supabase，影响下次调度
 
 > **Push 与 Scheduler 均在 Cloudflare Workers（`apps/api`），Supabase 只存 Token 与偏好。**
@@ -450,34 +454,43 @@ CallKit 集成要点：
 
 # 9. 05 — RTC / 实时语音
 
-> **Phase 0 必须实时双工。** AI 由**服务端**提供；iOS 仅持**短时效临时 Token**，不持有 API Key。
+> **Phase 0 必须实时双工。** AI 由**腾讯云 TRTC · AI 实时对话**提供；iOS 仅持 **UserSig**，不持有 SecretKey / LLM Key。
 
-## Phase 0 — 服务端签发 Realtime Ephemeral Token
+## Phase 0 — TRTC SDK + AI Bot 进房
 
 ```text
 CallKit 接听
    ↓
 POST /v1/calls/start（JWT + 余额校验）
    ↓
-Workers：OPENAI_API_KEY → 创建 Realtime session / ephemeral token
+Workers：生成 UserSig + LlmProvider.toTrtcLlmConfig() + StartAIConversation
    ↓
-iOS：WebRTC + 临时 Token → OpenAI Realtime
+iOS：TRTC SDK 进房（sdkAppId + roomId + userSig）
    ↓
-实时 speech-to-speech（支持打断）
+用户 ↔ TRTC 房间 ↔ AI Bot（实时双工，支持打断）
    ↓
 POST /v1/calls/end → 扣额度 + usage_logs
 ```
 
 iOS 实现要点：
 
-- `AVAudioSession` 与 CallKit 协同
+- 集成 **TXLiteAVSDK_TRTC**（Swift Package 或 CocoaPods）
+- `AVAudioSession` 与 CallKit 协同（`TRTCCloud.sharedInstance().startLocalAudio` 等）
 - 通话页：计时、静音、扬声器、挂断；可展示剩余额度
-- **禁止**在客户端存储 OpenAI API Key
+- **禁止**在客户端存储 TRTC SecretKey 或 LLM API Key
 
-## Phase 1+ — Fly.io Voice Agent + Agora（可选）
+### 腾讯云控制台准备
+
+1. 开通 [TRTC](https://cloud.tencent.com/product/trtc) + 领取免费时长包  
+2. 创建应用，记录 **SdkAppId**、**SecretKey**（UserSig 用）  
+3. 开通 **AI 实时对话**  
+4. 在 Workers 配置 **LlmProvider**（**OpenAI 兼容** 或 **Anthropic 兼容**，见 [architecture.md §15](./architecture.md#15-llm-provider-抽象openai--anthropic-两种兼容)）  
+5. 费用中心绑定 **支付宝**，设余额告警  
+
+## Phase 1+ — Fly.io Voice Agent（可选）
 
 ```text
-iOS ↔ Agora ↔ Python Voice Agent ↔ STT / LLM / TTS
+iOS ↔ TRTC / 自托管 RTC ↔ Python Voice Agent ↔ STT / LLM / TTS
 ```
 
 适合需要完全自控管道、或多模型路由时。
@@ -486,33 +499,51 @@ iOS ↔ Agora ↔ Python Voice Agent ↔ STT / LLM / TTS
 
 # 10. 06 — Voice Agent / 服务端 AI
 
-> **AI 能力在服务端。** Phase 0 由 Workers 编排 Realtime 会话；Phase 1+ 可迁 Fly.io Python Agent。
+> **AI 能力在服务端。** Phase 0 由 Workers **`LlmProvider`** 组装 TRTC `LLMConfig` 并调用 **StartAIConversation**；Phase 1+ 可迁 Fly.io Python Agent。
 
-## Phase 0 — Workers 轻量 Agent
+## Phase 0 — Workers + TRTC AI + LlmProvider
 
 ```text
 /v1/calls/start
    → 校验 user_wallets 余额
-   → 注入 system prompt（Sarah 人设、用户水平）
-   → OpenAI Realtime ephemeral token
-   → 返回 iOS
+   → 生成 roomId / userId / UserSig
+   → provider = getLlmProvider()   // openai_compatible | anthropic_compatible
+   → LLMConfig = provider.toTrtcLlmConfig(Sarah 人设、用户水平)
+   → StartAIConversation（AgentConfig + LLMConfig + TTSConfig）
+   → 返回 iOS：trtc { sdk_app_id, room_id, user_id, user_sig }
 
 /v1/calls/end
-   → 记录时长 / token 用量
-   → 扣减 credits
-   → Chat Completions 生成 learning summary → 存 Supabase
+   → StopAIConversation（可选）
+   → 记录时长 → 扣减 credits
+   → provider.complete() 生成 learning summary → 存 Supabase
+       （可与通话 Provider 不同，如 summary 用更强模型）
 ```
 
-Secrets（Workers，用户不可见）：
+### LlmProvider：两种主流兼容（Phase 0）
+
+| Provider id | 协议 | 典型用途 | TRTC 实时通话 |
+|-------------|------|----------|---------------|
+| `openai_compatible` | OpenAI Chat Completions | 通话 + 总结；DeepSeek / 混元 / OpenAI 等 | ✅ 原生（`LLMType: openai`） |
+| `anthropic_compatible` | Anthropic Messages | 通话后 summary；Claude | ⚠️ TRTC 需 OpenAI 网关中转，或 Phase 1+ 自托管 Agent |
+
+> **厂商不是第三套 Adapter**：DeepSeek、MiniMax 等挂在 `openai_compatible` 下，只改 `APIUrl` / `Model`。
+
+Secrets（Workers）：
 
 ```text
-OPENAI_API_KEY
+LLM_PROVIDER_DEFAULT=openai_compatible
+LLM_SUMMARY_PROVIDER=anthropic_compatible   # 可选
+
+LLM_OPENAI_COMPAT_API_KEY / _API_URL / _MODEL
+LLM_ANTHROPIC_API_KEY / _MODEL
+
+TRTC_* / TENCENT_* / APNS_* / SUPABASE_*
 ```
 
 ## Phase 1+ — Python Voice Agent（Fly.io）
 
 ```text
-User ↔ Agora ↔ Python Agent ↔ STT / LLM / TTS
+User ↔ TRTC ↔ Python Agent ↔ STT / LLM / TTS
 ```
 
 Workers 仍负责：鉴权、计费、Push、Scheduler。
@@ -778,10 +809,10 @@ Workers Cron 每 5 分钟触发
 ```text
 Cloudflare Workers（TypeScript + Hono）
 ├── REST API（Push Token、偏好、通话、**计费**）
-├── /v1/calls/start | end（Realtime 临时 Token + 扣费）
+├── /v1/calls/start | end（UserSig + TRTC AI + 扣费）
 ├── /v1/billing/*（StoreKit 验单、余额查询）
 ├── Cron Scheduler + VoIP Push → APNs
-└── Secrets：OPENAI_API_KEY, APNS_*, SUPABASE_*
+└── Secrets：TRTC_*, TENCENT_*, LLM_*, APNS_*, SUPABASE_*
 
 Supabase Free：
 ├── Auth
@@ -815,7 +846,7 @@ Phase 0 **不需要**：
 |---|---|
 | `POST /v1/push-tokens` | 注册 PushKit VoIP Token |
 | `GET/PATCH /v1/call-preferences` | 联系偏好 |
-| `POST /v1/calls/start` | 校验余额 → 签发 Realtime 临时 Token |
+| `POST /v1/calls/start` | 校验余额 → UserSig + StartAIConversation |
 | `POST /v1/calls/end` | 结束通话 → 扣费 + usage |
 | `GET /v1/wallet` | 查询剩余额度 |
 | `POST /v1/billing/apple/verify` | StoreKit 验单 → 增加额度 |
@@ -943,7 +974,7 @@ Phase 0 推荐 **Cloudflare Workers + Supabase Free**；有收入后再加 VPS �
 | 组件 | 原因 | 替代 |
 |---|---|---|
 | Python Voice Agent | Workers 无 Python 长进程 | Fly.io / Hetzner |
-| OpenAI Realtime 音频 | Workers 签发临时 Token；iOS WebRTC | 平台 Key 在 Secrets |
+| 腾讯云 TRTC AI | Workers StartAIConversation；iOS TRTC SDK | SecretKey 在 Secrets |
 | 传统 Fastify 24h 进程 | Workers 是 request/cron 模型 | Workers + Hono，或 VPS |
 
 ### 推荐 Phase 0 部署拓扑
@@ -976,8 +1007,8 @@ Phase 0 推荐 **Cloudflare Workers + Supabase Free**；有收入后再加 VPS �
                         │
         ┌───────────────┼────────────────┐
         ↓               ↓                ↓
-   CallKit+Push    StoreKit          Realtime
-   (PushKit)       (充值)         (临时 Token)
+   CallKit+Push    StoreKit          TRTC SDK
+   (PushKit)       (充值)         (UserSig 进房)
         │               │                │
         └───────────────┼────────────────┘
                         ↓
@@ -1041,6 +1072,13 @@ callie/
 │       │   ├── index.ts        # Hono 路由 + scheduled()
 │       │   ├── scheduler.ts    # Cron：主动来电调度
 │       │   ├── apns.ts         # VoIP Push → APNs
+│       │   ├── trtc.ts         # UserSig + StartAIConversation
+│       │   ├── llm/            # openai-compatible + anthropic-compatible
+│       │   │   ├── registry.ts
+│       │   │   ├── trtc-config.ts
+│       │   │   └── providers/
+│       │   │       ├── openai-compatible.ts
+│       │   │       └── anthropic-compatible.ts
 │       │   └── db.ts           # Supabase 客户端
 │       ├── wrangler.toml
 │       └── package.json
@@ -1051,6 +1089,7 @@ callie/
 ├── docs/                       # Obsidian vault（仅产品/工程文档，不含代码）
 │   ├── .obsidian/
 │   ├── prd.md
+│   ├── architecture.md         # 系统架构图（独立成文）
 │   └── project-architecture-and-tech-stack.md
 │
 ├── README.md
@@ -1074,7 +1113,9 @@ compatibility_date = "2024-01-01"
 crons = ["*/5 * * * *"]   # 每 5 分钟跑 Scheduler
 
 # Secrets（wrangler secret put）：
-# OPENAI_API_KEY, APNS_KEY_P8, APNS_KEY_ID, APNS_TEAM_ID, APNS_BUNDLE_ID
+# LLM：LLM_PROVIDER_DEFAULT + 各 Provider Secrets（见 architecture.md §15）
+# TRTC_SDK_APP_ID, TRTC_SECRET_KEY, TENCENT_SECRET_ID, TENCENT_SECRET_KEY
+# APNS_KEY_P8, APNS_KEY_ID, APNS_TEAM_ID, APNS_BUNDLE_ID
 # SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 # APPLE_IAP_*（StoreKit 验单，Phase 0-B）
 ```
@@ -1104,9 +1145,9 @@ PushKit + CallKit（iOS 真机）
 ```text
 CallKit 接听 → POST /v1/calls/start
         ↓
-Workers 签发 Realtime 临时 Token
+Workers 签发 UserSig + 启动 TRTC AI 对话
         ↓
-实时双向语音
+实时双向语音（TRTC SDK）
         ↓
 POST /v1/calls/end → 扣额度 + summary
 ```
@@ -1118,7 +1159,7 @@ POST /v1/calls/end → 扣额度 + summary
 ## Phase 0-C — 产品闭环
 
 ```text
-Onboarding + API Key 设置
+Onboarding + 学习目标设置
         ↓
 本地学习画像（SwiftData）
         ↓
@@ -1130,9 +1171,9 @@ Onboarding + API Key 设置
 ## Phase 1+ — 体验升级（有预算后）
 
 ```text
-Agora / LiveKit + Python Voice Agent
+Fly.io 自托管 Voice Agent（可选）
         ↓
-官方 AI Key + StoreKit 订阅
+StoreKit 订阅
         ↓
 pgvector Memory / 完整 Learning Engine
 ```
@@ -1245,6 +1286,14 @@ Modular Architecture
 - 来电（CallKit + PushKit）和语音必须原生实现
 - Android 等其他平台在 iOS 核心闭环验证后再评估
 
+## 原则 8：LLM 以 OpenAI / Anthropic 两种兼容为主
+
+- Workers **`LlmProvider`** 核心只有两个 Adapter：`openai_compatible`、`anthropic_compatible`  
+- DeepSeek / 混元 / Groq 等 = `openai_compatible` 的不同 `APIUrl`，不是新 Adapter  
+- TRTC 实时通话走 OpenAI 协议；Anthropic 实时需网关或 Phase 1+ Agent  
+- 通话 Provider 与总结 Provider **可分离**（如 DeepSeek 通话 + Claude 总结）  
+- iOS 不感知 LLM 厂商
+
 ## 原则 7：预算有限时，保卖点、砍成本
 
 - **必须保留**：PushKit + CallKit + Scheduler + 服务端 AI + 计费
@@ -1265,7 +1314,7 @@ AI 主动联系（CallKit 来电）     ← 卖点，必须成立
       ↓
 用户愿意接
       ↓
-接听后实时语音聊（服务端 Realtime Agent）  ← 像电话，必须成立
+接听后实时语音聊（TRTC AI + LlmProvider）  ← 像电话，必须成立
       ↓
 用户愿意为通话充值 / 续费
       ↓

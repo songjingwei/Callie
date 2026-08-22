@@ -5,6 +5,7 @@
 ## 文档索引
 
 - [prd.md](./prd.md) — 产品需求（PRD）
+- [architecture.md](./architecture.md) — **系统架构图**（含 §15 OpenAI / Anthropic 两种 LlmProvider）
 - [project-architecture-and-tech-stack.md](./project-architecture-and-tech-stack.md) — 工程拆分与技术栈
 
 ## 在 Obsidian 中打开

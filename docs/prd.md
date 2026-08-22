@@ -49,22 +49,23 @@ MVP 采用 **iOS 原生（SwiftUI）**；**AI 由 Callie 服务端提供**；用
 | 客户端 | SwiftUI 原生 | 同左 |
 | 来电体验 | CallKit + PushKit | 同左 |
 | Backend | **Cloudflare Workers**（API + Cron + Push + **计费**） | + Fly.io Voice Agent |
-| AI 能力 | **服务端 Agent**（Realtime 临时 Token） | 完整 Python Voice Agent |
+| AI 能力 | **服务端 Agent**（TRTC UserSig + AI 对话任务） | 完整 Python Voice Agent |
 | 用户付费 | **StoreKit 充值 → 通话额度** | + 订阅包（月含 N 分钟） |
-| 语音对话 | 实时双工（OpenAI Realtime，平台 Key） | Agora + 自托管 Agent（可选） |
+| 语音对话 | 实时双工（**腾讯云 TRTC AI** + **LlmProvider**） | 自托管 Voice Agent（可选） |
 | 数据库 | Supabase PostgreSQL | 扩容 |
 | Android | 不做 | 再评估 |
 
 理由：
 
 - **用户不填 API Key**：信任成本低，适合大众用户
-- **平台代持 Key**：仅存 Workers Secrets，下发短时效临时 Token
+- **平台代持 Key**：TRTC / LLM Key 仅存 Workers Secrets，下发 UserSig
 - **充值模式**：AI 成本由用户付费覆盖，可持续商业化
 - **Backend**：Cloudflare Workers + Supabase；固定成本约 **$99/年**（Apple）+ **$0/月** 基础设施
 
 > **不为 Android 牺牲 iOS 来电体验。**
 
-详细工程拆分见 [project-architecture-and-tech-stack.md](./project-architecture-and-tech-stack.md)。
+详细工程拆分见 [project-architecture-and-tech-stack.md](./project-architecture-and-tech-stack.md)。  
+**系统架构图**见 [architecture.md](./architecture.md)。
 
 ------------------------------------------------------------------------
 
@@ -218,7 +219,7 @@ MVP 包含：
 
 | 层 | 说明 |
 |---|---|
-| AI | Callie 服务端提供（OpenAI Realtime，平台 Key） |
+| AI | Callie 服务端（**TRTC AI** + **OpenAI / Anthropic 兼容 LlmProvider**） |
 | 付费 | StoreKit 购买通话额度；内测可赠免费分钟 |
 | 计费 | 按通话时长 / token 扣减 `user_wallets` 余额 |
 | 基础设施 | Cloudflare Workers + Supabase，约 $0/月 |
@@ -477,30 +478,31 @@ MVP 不使用传统手机号电话（PSTN）。
 
 接听后必须 **像打电话一样实时对话**。
 
-**Phase 0：服务端 Agent + OpenAI Realtime 临时 Token**
+**Phase 0：TRTC AI 实时对话 + UserSig 进房**
 
 ```text
 CallKit 接听
    ↓
 POST /v1/calls/start（校验余额）
    ↓
-Workers 用平台 Key 签发 Realtime ephemeral token
+Workers 生成 UserSig + LlmProvider.toTrtcLlmConfig() + StartAIConversation
    ↓
-iOS WebRTC 连接（客户端无 API Key）
+iOS TRTC SDK 进房（客户端无 SecretKey / LLM Key）
    ↓
 POST /v1/calls/end → 扣减通话额度
 ```
 
-- API Key **仅存服务端**（Workers Secrets）
+- TRTC SecretKey、LLM API Key **仅存 Workers Secrets**
 - 用户通过 **StoreKit 充值** 获得通话额度
 - 支持打断（barge-in），体验接近真电话
+- 腾讯云支持 **支付宝** 充值；开发期可用约 1 万分钟/月免费包
 
 ### Phase 1+（可选）
 
-- Fly.io Python Voice Agent + Agora
+- Fly.io Python Voice Agent（完全自控管道）
 - 订阅包（每月含 N 分钟）+ 超额按量
 
-> **CallKit 来电 + 服务端 Realtime Agent + 额度计费，构成完整商业闭环。**
+> **CallKit 来电 + TRTC AI 实时对话 + 额度计费，构成完整商业闭环。**
 
 ------------------------------------------------------------------------
 
@@ -508,20 +510,29 @@ POST /v1/calls/end → 扣减通话额度
 
 AI Voice Agent 是整个产品的核心技术模块。
 
+**Phase 0 实现：** TRTC AI 编排 STT → LLM → TTS；Workers **`LlmProvider`** 以 **OpenAI 兼容** 与 **Anthropic 兼容** 两种协议为主（DeepSeek / Claude 等只是不同 APIUrl / Model）；iOS 仅 TRTC SDK 进房。
+
+**LlmProvider 原则：**
+
+- 核心 Adapter：**`openai_compatible`**（Chat Completions）、**`anthropic_compatible`**（Messages API）  
+- TRTC 实时通话原生支持 OpenAI 协议；Anthropic 实时需网关或 Phase 1+ 自托管 Agent  
+- 通话与总结可使用不同 Provider（如 DeepSeek 通话 + Claude 总结）  
+- 新增厂商通常 **只改配置**，不改 iOS
+
 ``` text
 用户语音
     ↓
-RTC
+RTC（TRTC）
     ↓
 Speech-to-Text
     ↓
 Conversation Engine
     ↓
-LLM
+LLM（LlmProvider 所选模型）
     ↓
 Text-to-Speech
     ↓
-RTC
+RTC（TRTC）
     ↓
 用户
 ```
@@ -1020,15 +1031,18 @@ call_preferences
 ├── allow_proactive     -- 是否允许主动来电
 └── timezone
 
-call_sessions          -- Phase 1+（RTC 房间）；Phase 0 可省略
+call_sessions          -- Phase 0 必需（TRTC 房间与任务）
 ├── id
-├── conversation_id
-├── rtc_room_id
-├── status
-└── ...
+├── user_id
+├── trtc_room_id
+├── trtc_task_id        -- StartAIConversation 返回
+├── status              -- in_progress | completed
+├── started_at
+├── ended_at
+└── duration_seconds
 ```
 
-**不在 Supabase 存：** 用户 API Key（平台 Key 仅在 Workers Secrets）。
+**不在 Supabase 存：** TRTC SecretKey、LLM API Key（仅存 Workers Secrets）。
 
 **Phase 0 计费相关表（必需）：**
 
@@ -1053,7 +1067,7 @@ usage_logs
 ├── call_id
 ├── duration_seconds
 ├── model
-├── estimated_cost_usd    -- 内部成本核算
+├── estimated_cost_cny    -- 内部成本核算（TRTC + LLM）
 └── created_at
 ```
 
@@ -1068,7 +1082,7 @@ Phase 0 自建 API 路由（`apps/api`，TypeScript + Hono）：
 | POST | `/v1/push-tokens` | 注册 / 更新 VoIP Token |
 | DELETE | `/v1/push-tokens` | 注销 VoIP Token |
 | GET/PATCH | `/v1/call-preferences` | 联系偏好 |
-| POST | `/v1/calls/start` | 校验余额，签发 Realtime 临时 Token |
+| POST | `/v1/calls/start` | 校验余额，签发 UserSig + 启动 TRTC AI 对话 |
 | POST | `/v1/calls/end` | 结束通话，扣费，触发 summary |
 | GET | `/v1/wallet` | 查询剩余通话额度 |
 | POST | `/v1/billing/apple/verify` | StoreKit 2 验单，增加额度 |
@@ -1077,7 +1091,9 @@ Phase 0 自建 API 路由（`apps/api`，TypeScript + Hono）：
 
 鉴权：iOS 带 Supabase JWT；Workers 验证后操作对应用户数据。
 
-Secrets（Workers）：`OPENAI_API_KEY`、`APNS_*`、`SUPABASE_*`、`APPLE_IAP_*`（验单）。
+Secrets（Workers）：`TRTC_*`、`TENCENT_*`、`LLM_*`（按 LlmProvider 分包）、`APNS_*`、`SUPABASE_*`、`APPLE_IAP_*`（验单）。
+
+LlmProvider 详见 [architecture.md §15](./architecture.md#15-llm-provider-抽象openai--anthropic-两种兼容)。
 
 ------------------------------------------------------------------------
 
@@ -1115,31 +1131,11 @@ Phase 1+：可选 **自动续订订阅**（每月含 N 分钟，超额另计）�
 
 # 21. 系统架构
 
-``` text
-              iOS App (SwiftUI)
-                        │
-          ┌─────────────┴─────────────┐
-          │                           │
-   supabase-swift              PushKit VoIP
-   (Auth)                            │
-          │                      CallKit 来电 UI
-          ↓                           │
-   Supabase Free              Cloudflare Workers
-   (PostgreSQL)               (API + 计费 + Cron + Push)
-          │                           │
-          └───────────┬───────────────┘
-                      ↓
-              POST /v1/calls/start
-              → Realtime 临时 Token
-                      ↓
-              实时双工语音（平台 Agent）
-                      ↓
-              POST /v1/calls/end → 扣额度
-                      ↓
-              SwiftData + Supabase（反馈/记录）
-```
+系统架构图（部署拓扑、主动来电、语音通话、充值计费、数据模型、安全边界等）见独立文档：
 
-Phase 1+：Fly.io Voice Agent、订阅包、pgvector Memory。
+→ **[architecture.md](./architecture.md)**
+
+Phase 1+ 扩展：Fly.io Voice Agent、订阅包、pgvector Memory。
 
 ------------------------------------------------------------------------
 
@@ -1167,7 +1163,7 @@ Cloudflare Workers 负责：
 
 但是：
 
-> **不要把实时语音建立在 Workers 长连接上。** Workers 只负责签发 Token 与计费；音频 WebRTC 在 iOS ↔ OpenAI 之间。
+> **不要把实时语音建立在 Workers 长连接上。** Workers 只负责 UserSig、StartAIConversation 与计费；音频 RTC 在 iOS ↔ 腾讯云 TRTC 之间。
 
 Supabase Realtime（Phase 1+ IM）适合：
 
@@ -1178,7 +1174,7 @@ Supabase Realtime（Phase 1+ IM）适合：
 不适合：
 
 -   VoIP Push / CallKit 调度（用 Cloudflare Workers）
--   实时语音流（用 OpenAI Realtime / Agora）
+-   实时语音流（用 **腾讯云 TRTC AI**）
 
 ------------------------------------------------------------------------
 

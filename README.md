@@ -17,7 +17,8 @@ Callie/
 | 文档 | 说明 |
 |------|------|
 | [docs/prd.md](./docs/prd.md) | 产品需求 |
-| [docs/project-architecture-and-tech-stack.md](./docs/project-architecture-and-tech-stack.md) | 架构与技术栈 |
+| [docs/architecture.md](./docs/architecture.md) | **系统架构图** |
+| [docs/project-architecture-and-tech-stack.md](./docs/project-architecture-and-tech-stack.md) | 工程拆分与技术栈 |
 
 ## Obsidian
 
@@ -26,8 +27,8 @@ Callie/
 
 ## 技术栈（Phase 0）
 
-- **iOS**：SwiftUI + CallKit + PushKit
+- **iOS**：SwiftUI + CallKit + PushKit + TRTC SDK
 - **Backend**：Cloudflare Workers + Supabase
-- **AI**：服务端 OpenAI Realtime + StoreKit 充值
+- **AI**：TRTC AI + LlmProvider（OpenAI / Anthropic 兼容）+ StoreKit 充值
 
 详见 [docs/project-architecture-and-tech-stack.md](./docs/project-architecture-and-tech-stack.md)。
