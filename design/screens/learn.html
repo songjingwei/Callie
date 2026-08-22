@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="screen-chrome">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Callie — 学习</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+</head>
+<body class="screen-page">
+  <nav class="screen-page__nav"><a class="link-back" href="../index.html">← Design System</a></nav>
+  <div class="screen-page__toolbar">
+    <div class="theme-toggle" role="group" aria-label="设备主题">
+      <button type="button" class="theme-toggle__btn theme-toggle__btn--active" data-theme-btn="light">Light</button>
+      <button type="button" class="theme-toggle__btn" data-theme-btn="dark">Dark</button>
+    </div>
+  </div>
+  <div class="device" data-theme="light">
+    <div class="device__island"></div>
+    <div class="device__screen">
+      <div class="device__status device__status--light"><span>9:41</span><span>5G</span></div>
+      <div class="device__content device__content--with-tab">
+        <div class="page page--rich">
+          <header class="page-header page-header--large">
+            <h1 class="page-title">学习</h1>
+            <p class="page-subtitle">本周 3 次通话 · 24 分钟</p>
+          </header>
+          <div class="page-body">
+            <div class="stat-grid">
+              <div class="stat-card stat-card--accent">
+                <div class="stat-card__value">3</div>
+                <div class="stat-card__label">本周通话</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card__value">24m</div>
+                <div class="stat-card__label">练习时长</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card__value">12</div>
+                <div class="stat-card__label">新表达</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-card__value">5</div>
+                <div class="stat-card__label">待复习错误</div>
+              </div>
+            </div>
+
+            <h3 style="font-size:var(--text-sm);font-weight:var(--weight-semibold);color:var(--color-text-secondary);margin-bottom:var(--space-3)">待复习单词</h3>
+            <div class="vocab-chips" style="margin-bottom:var(--space-4)">
+              <span class="vocab-chip"><span class="vocab-chip__word">itinerary</span><span class="vocab-chip__def">行程</span></span>
+              <span class="vocab-chip"><span class="vocab-chip__word">cuisine</span><span class="vocab-chip__def">菜肴</span></span>
+              <span class="vocab-chip"><span class="vocab-chip__word">scenic</span><span class="vocab-chip__def">风景</span></span>
+            </div>
+
+            <h3 style="font-size:var(--text-sm);font-weight:var(--weight-semibold);color:var(--color-text-secondary);margin-bottom:var(--space-3)">常见错误</h3>
+            <div class="card" style="margin-bottom:var(--space-4);box-shadow:var(--shadow-card)">
+              <p style="font-size:var(--text-sm);margin-bottom:var(--space-2)"><strong>过去时</strong> · 出现 3 次</p>
+              <div class="feedback-correction">
+                <span class="feedback-correction__wrong">I go to…</span>
+                <span class="feedback-correction__right">I went to…</span>
+              </div>
+            </div>
+
+            <h3 style="font-size:var(--text-sm);font-weight:var(--weight-semibold);color:var(--color-text-secondary);margin-bottom:var(--space-3)">最近通话</h3>
+            <div class="list-group" style="box-shadow:var(--shadow-card)">
+              <div class="list-cell">
+                <span class="list-cell__label">Sarah · 旅行</span>
+                <span class="list-cell__value">8:32</span>
+              </div>
+              <div class="list-cell">
+                <span class="list-cell__label">Alex · 面试</span>
+                <span class="list-cell__value">6:15</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="tab-bar">
+        <span class="tab-bar__item"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>消息</span>
+        <span class="tab-bar__item tab-bar__item--active"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>学习</span>
+        <a class="tab-bar__item" href="moments.html" style="color:inherit"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>朋友圈</a>
+        <span class="tab-bar__item"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>我的</span>
+      </nav>
+      <div class="device__home-indicator device__home-indicator--dark"></div>
+    </div>
+  </div>
+  <p class="screen-page__label">07 · Learn — 学习 Tab</p>
+  <script src="../js/preview-theme.js"></script>
+</body>
+</html>

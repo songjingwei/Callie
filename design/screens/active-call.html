@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Callie — 通话中</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/assets.css" />
+</head>
+<body class="screen-page">
+  <nav class="screen-page__nav"><a class="link-back" href="../index.html">← Design System</a></nav>
+  <div class="device device--dark">
+    <div class="device__island"></div>
+    <div class="device__screen">
+      <div class="device__status device__status--dark"><span>9:41</span><span>5G</span></div>
+      <div class="device__content">
+        <div class="call-screen">
+          <div class="call-screen__partner">
+            <img class="avatar-img avatar-img--xl" src="../assets/avatars/avatar-sarah.png" alt="Sarah" />
+            <h1 class="call-screen__name">Sarah</h1>
+            <p class="call-screen__status">正在说话…</p>
+            <div class="waveform" aria-hidden="true">
+              <span class="waveform__bar"></span><span class="waveform__bar"></span><span class="waveform__bar"></span>
+              <span class="waveform__bar"></span><span class="waveform__bar"></span><span class="waveform__bar"></span><span class="waveform__bar"></span>
+            </div>
+            <p class="call-screen__timer">00:04:32</p>
+            <p class="call-screen__status" style="font-size:var(--text-xs);margin-top:var(--space-2)">剩余额度 42 分钟</p>
+          </div>
+          <div class="call-controls">
+            <div class="call-control-group">
+              <button class="btn btn--call-control" type="button" aria-label="静音">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+              </button>
+              <span class="call-control-label">静音</span>
+            </div>
+            <div class="call-control-group">
+              <button class="btn btn--call-hangup" type="button" aria-label="挂断">
+                <svg class="btn-icon--lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12" transform="rotate(0)"/></svg>
+              </button>
+            </div>
+            <div class="call-control-group">
+              <button class="btn btn--call-control btn--call-control--active" type="button" aria-label="扬声器">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </button>
+              <span class="call-control-label">扬声器</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="device__home-indicator"></div>
+    </div>
+  </div>
+  <p class="screen-page__label">05 · Active Call — TRTC 双工 · 计时与额度</p>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="screen-chrome">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Callie — 我的</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+</head>
+<body class="screen-page">
+  <nav class="screen-page__nav"><a class="link-back" href="../index.html">← Design System</a></nav>
+  <div class="screen-page__toolbar">
+    <div class="theme-toggle" role="group" aria-label="设备主题">
+      <button type="button" class="theme-toggle__btn theme-toggle__btn--active" data-theme-btn="light">Light</button>
+      <button type="button" class="theme-toggle__btn" data-theme-btn="dark">Dark</button>
+    </div>
+  </div>
+  <div class="device" data-theme="light">
+    <div class="device__island"></div>
+    <div class="device__screen">
+      <div class="device__status device__status--light"><span>9:41</span><span>5G</span></div>
+      <div class="device__content device__content--with-tab">
+        <div class="page page--rich">
+          <header class="page-header page-header--large">
+            <h1 class="page-title">我的</h1>
+          </header>
+          <div class="page-body">
+            <a href="wallet.html" class="wallet-card" style="display:block;text-decoration:none;color:inherit;box-shadow:var(--shadow-md)">
+              <div class="wallet-card__label">剩余通话额度</div>
+              <div class="wallet-card__balance">42 分钟</div>
+              <div class="wallet-card__hint">点击充值 · 新用户曾获赠 10 分钟</div>
+            </a>
+
+            <div class="list-group" style="box-shadow:var(--shadow-card)">
+              <div class="list-cell">
+                <span class="list-cell__label">学习目标</span>
+                <span class="list-cell__value">日常口语</span>
+              </div>
+              <div class="list-cell">
+                <span class="list-cell__label">语言水平</span>
+                <span class="list-cell__value">B1</span>
+              </div>
+              <div class="list-cell">
+                <span class="list-cell__label">可联系时段</span>
+                <span class="list-cell__value">19:00 – 21:00</span>
+              </div>
+              <div class="list-cell">
+                <span class="list-cell__label">每日来电上限</span>
+                <span class="list-cell__value">2 次</span>
+              </div>
+            </div>
+
+            <div class="list-group" style="box-shadow:var(--shadow-card)">
+              <div class="list-cell">
+                <span class="list-cell__label">允许 AI 主动来电</span>
+                <span class="list-cell__value" style="color:var(--color-success)">已开启</span>
+              </div>
+              <div class="list-cell">
+                <span class="list-cell__label">外观</span>
+                <span class="list-cell__value">跟随系统</span>
+              </div>
+              <div class="list-cell">
+                <span class="list-cell__label">通知设置</span>
+                <span class="list-cell__value">›</span>
+              </div>
+              <div class="list-cell">
+                <span class="list-cell__label">账户与隐私</span>
+                <span class="list-cell__value">›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="tab-bar">
+        <span class="tab-bar__item"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>消息</span>
+        <span class="tab-bar__item"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>学习</span>
+        <a class="tab-bar__item" href="moments.html" style="color:inherit"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>朋友圈</a>
+        <span class="tab-bar__item tab-bar__item--active"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>我的</span>
+      </nav>
+      <div class="device__home-indicator device__home-indicator--dark"></div>
+    </div>
+  </div>
+  <p class="screen-page__label">09 · Profile — 偏好与额度入口</p>
+  <script src="../js/preview-theme.js"></script>
+</body>
+</html>

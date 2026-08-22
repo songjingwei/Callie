@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="screen-chrome">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Callie — 与 Sarah 聊天</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+</head>
+<body class="screen-page">
+  <nav class="screen-page__nav"><a class="link-back" href="../index.html">← Design System</a></nav>
+  <div class="screen-page__toolbar">
+    <div class="theme-toggle" role="group" aria-label="设备主题">
+      <button type="button" class="theme-toggle__btn theme-toggle__btn--active" data-theme-btn="light">Light</button>
+      <button type="button" class="theme-toggle__btn" data-theme-btn="dark">Dark</button>
+    </div>
+  </div>
+  <div class="device" data-theme="light">
+    <div class="device__island"></div>
+    <div class="device__screen">
+      <div class="device__status device__status--light"><span>9:41</span><span>5G</span></div>
+      <div class="device__content">
+        <nav class="nav-bar">
+          <a class="nav-bar__back" href="messages.html">消息</a>
+          <span class="nav-bar__title">Sarah</span>
+          <span class="nav-bar__action">通话</span>
+        </nav>
+        <div class="message-list">
+          <div class="message-bubble message-bubble--incoming">
+            Hey! Are you free for a quick chat? I wanted to hear about your trip.
+          </div>
+          <div class="message-bubble message-bubble--outgoing">
+            Sure, I can talk for a few minutes.
+          </div>
+          <div class="message-bubble message-bubble--incoming">
+            Great — I'll call you in a sec. No pressure, just practice.
+          </div>
+          <p style="text-align:center;font-size:var(--text-xs);color:var(--color-text-tertiary);padding:var(--space-2) 0">
+            上次通话 · 昨天 19:30 · 8 分 32 秒
+          </p>
+        </div>
+      </div>
+      <div class="device__home-indicator device__home-indicator--dark"></div>
+    </div>
+  </div>
+  <p class="screen-page__label">03 · Chat — 会话详情（Phase 0 简化 IM）</p>
+  <script src="../js/preview-theme.js"></script>
+</body>
+</html>

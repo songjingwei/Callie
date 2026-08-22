@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="screen-chrome">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Callie — 添加 AI 伙伴</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/assets.css" />
+</head>
+<body class="screen-page">
+  <nav class="screen-page__nav"><a class="link-back" href="messages.html">← 消息</a></nav>
+  <div class="screen-page__toolbar">
+    <div class="theme-toggle" role="group" aria-label="设备主题">
+      <button type="button" class="theme-toggle__btn theme-toggle__btn--active" data-theme-btn="light">Light</button>
+      <button type="button" class="theme-toggle__btn" data-theme-btn="dark">Dark</button>
+    </div>
+  </div>
+  <div class="device" data-theme="light">
+    <div class="device__island"></div>
+    <div class="device__screen">
+      <div class="device__status device__status--light"><span>9:41</span><span>5G</span></div>
+      <div class="device__content">
+        <div class="page page--rich">
+          <header class="nav-bar" style="padding-top:var(--space-2)">
+            <a class="nav-bar__back" href="messages.html">取消</a>
+            <span class="nav-bar__title">添加 AI 伙伴</span>
+            <span class="nav-bar__action" style="visibility:hidden">·</span>
+          </header>
+
+          <div class="search-bar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="search" placeholder="搜索伙伴名称或场景" aria-label="搜索 AI 伙伴" />
+          </div>
+
+          <p class="section-label">推荐伙伴</p>
+          <div class="page-body" style="padding-top:0">
+            <div class="add-partner-row">
+              <img class="avatar-img" src="../assets/avatars/avatar-sarah.png" alt="Sarah" />
+              <div class="add-partner-row__info">
+                <div class="add-partner-row__name">Sarah</div>
+                <div class="add-partner-row__desc">美式日常 · 轻松活泼</div>
+              </div>
+              <button class="btn btn--primary btn--compact" type="button">添加</button>
+            </div>
+            <div class="add-partner-row">
+              <img class="avatar-img" src="../assets/avatars/avatar-alex.png" alt="Alex" />
+              <div class="add-partner-row__info">
+                <div class="add-partner-row__name">Alex</div>
+                <div class="add-partner-row__desc">商务英语 · 面试场景</div>
+              </div>
+              <button class="btn btn--secondary btn--compact" type="button">已添加</button>
+            </div>
+            <div class="add-partner-row">
+              <img class="avatar-img" src="../assets/avatars/avatar-emma.png" alt="Emma" />
+              <div class="add-partner-row__info">
+                <div class="add-partner-row__name">Emma</div>
+                <div class="add-partner-row__desc">英式英语 · 生活话题</div>
+              </div>
+              <button class="btn btn--primary btn--compact" type="button">添加</button>
+            </div>
+          </div>
+
+          <p class="section-label">按场景</p>
+          <div class="page-body" style="padding-top:0">
+            <div class="chip-group" style="margin-bottom:var(--space-4)">
+              <span class="chip chip--selected">全部</span>
+              <span class="chip">日常</span>
+              <span class="chip">商务</span>
+              <span class="chip">旅行</span>
+              <span class="chip">考试</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="device__home-indicator device__home-indicator--dark"></div>
+    </div>
+  </div>
+  <p class="screen-page__label">02c · Add Partner — 微信式「+」进入搜索添加</p>
+  <script src="../js/preview-theme.js"></script>
+</body>
+</html>

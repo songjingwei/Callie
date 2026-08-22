@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="hub-page">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Callie Design System</title>
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/assets.css" />
+</head>
+<body>
+  <div class="hub">
+    <header class="hub-header">
+      <h1>Callie Design System <span class="theme-badge">v1.2</span></h1>
+      <p>
+        Phase 0 iOS 设计规范与 HTML 原型。本页<strong>始终为浅色</strong>，便于浏览。
+        App 暗色预览请用下方切换器，或进入各屏幕页面右上角 <strong>Light / Dark</strong> 按钮。
+        开发对照 <code>docs/design.md</code>。
+      </p>
+    </header>
+
+    <div class="theme-toolbar">
+      <span class="theme-toolbar__label">📱 消息页实时预览</span>
+      <div class="theme-toggle" role="group" aria-label="设备主题">
+        <button type="button" class="theme-toggle__btn theme-toggle__btn--active" data-theme-btn="light">Light</button>
+        <button type="button" class="theme-toggle__btn" data-theme-btn="dark">Dark</button>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:center;margin-bottom:var(--space-12)">
+      <div class="device" data-theme="light" style="transform:scale(0.85);transform-origin:top center">
+        <div class="device__island"></div>
+        <div class="device__screen">
+          <div class="device__status device__status--light"><span>9:41</span><span>5G</span></div>
+          <div class="device__content device__content--with-tab">
+            <div class="page page--rich">
+              <header class="page-header page-header--large page-header--toolbar">
+                <h1 class="page-title">消息</h1>
+                <span class="nav-icon-btn nav-icon-btn--brand" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+              </header>
+              <div class="hero-strip">
+                <div class="hero-strip__text"><h2>今日还没练口语</h2><p>Sarah 在线</p></div>
+                <span class="hero-strip__badge">去通话</span>
+              </div>
+              <div class="page-body page-body--flush">
+                <div class="conversation-panel">
+                  <ul class="conversation-list">
+                    <li>
+                      <div class="conversation-row">
+                        <span class="avatar-wrap">
+                          <img class="avatar-img" src="assets/avatars/avatar-sarah.png" alt="Sarah" />
+                          <span class="avatar__badge"></span>
+                        </span>
+                        <div class="conversation-row__body">
+                          <div class="conversation-row__top">
+                            <span class="conversation-row__name">Sarah</span>
+                            <span class="conversation-row__time">2 分钟前</span>
+                          </div>
+                          <p class="conversation-row__preview conversation-row__preview--unread">Hey! Are you free for a quick chat?</p>
+                        </div>
+                        <span class="conversation-row__unread"></span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="conversation-row">
+                        <img class="avatar-img" src="assets/avatars/avatar-alex.png" alt="Alex" />
+                        <div class="conversation-row__body">
+                          <div class="conversation-row__top">
+                            <span class="conversation-row__name">Alex</span>
+                            <span class="conversation-row__time">昨天</span>
+                          </div>
+                          <p class="conversation-row__preview">Let's practice your job interview.</p>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <nav class="tab-bar">
+            <span class="tab-bar__item tab-bar__item--active"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>消息</span>
+            <span class="tab-bar__item"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>学习</span>
+            <span class="tab-bar__item"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>朋友圈</span>
+            <span class="tab-bar__item"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>我的</span>
+          </nav>
+          <div class="device__home-indicator device__home-indicator--dark"></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="hub-section">
+      <h2>色彩 Color</h2>
+      <div class="token-grid">
+        <div class="token-swatch"><div class="token-swatch__color" style="background:#d94432"></div><div class="token-swatch__label">brand #D94432</div></div>
+        <div class="token-swatch"><div class="token-swatch__color" style="background:linear-gradient(165deg,#faf8f5,#ebe6de)"></div><div class="token-swatch__label">bg gradient</div></div>
+        <div class="token-swatch"><div class="token-swatch__color" style="background:#1a1816"></div><div class="token-swatch__label">text #1A1816</div></div>
+        <div class="token-swatch"><div class="token-swatch__color" style="background:#252322"></div><div class="token-swatch__label">dark device bg</div></div>
+        <div class="token-swatch"><div class="token-swatch__color" style="background:#e85d4c"></div><div class="token-swatch__label">Sarah</div></div>
+        <div class="token-swatch"><div class="token-swatch__color" style="background:#3d7a99"></div><div class="token-swatch__label">Alex</div></div>
+        <div class="token-swatch"><div class="token-swatch__color" style="background:#7c6bae"></div><div class="token-swatch__label">Emma</div></div>
+      </div>
+    </section>
+
+    <section class="hub-section">
+      <h2>组件 Components</h2>
+      <div class="component-row">
+        <img class="avatar-img" src="assets/avatars/avatar-sarah.png" alt="Sarah" />
+        <button class="nav-icon-btn nav-icon-btn--brand" type="button" aria-label="添加">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <span class="tag tag--sarah">今日表达</span>
+      </div>
+    </section>
+
+    <section class="hub-section">
+      <h2>页面原型 Screens</h2>
+      <div class="screen-grid">
+        <a class="screen-card" href="screens/onboarding.html">
+          <div class="screen-card__thumb"><div class="screen-card__thumb-inner"><div class="thumb-bar"></div><div class="thumb-hero" style="margin-top:20px;height:40px;background:#fdebe8"></div></div></div>
+          <div class="screen-card__meta"><h3>01 Onboarding</h3><p>价值主张与目标设置</p></div>
+        </a>
+        <a class="screen-card" href="screens/messages.html">
+          <div class="screen-card__thumb">
+            <div class="screen-card__thumb-inner">
+              <div class="thumb-bar"></div>
+              <div class="thumb-hero"></div>
+              <div class="thumb-panel"><div class="thumb-row"><span class="thumb-dot" style="background:#e85d4c"></span><span class="thumb-line"></span></div><div class="thumb-row"><span class="thumb-dot" style="background:#3d7a99"></span><span class="thumb-line thumb-line--short"></span></div></div>
+            </div>
+          </div>
+          <div class="screen-card__meta"><h3>02 消息首页</h3><p>「+」添加 · 点头像看资料</p></div>
+        </a>
+        <a class="screen-card" href="screens/add-partner.html">
+          <div class="screen-card__thumb"><div class="screen-card__thumb-inner"><div class="thumb-bar"></div><div style="margin:8px;height:12px;border-radius:6px;background:#fff;border:1px solid rgba(0,0,0,.08)"></div></div></div>
+          <div class="screen-card__meta"><h3>02c 添加伙伴</h3><p>搜索与推荐 AI 伙伴</p></div>
+        </a>
+        <a class="screen-card" href="screens/partner-profile.html">
+          <div class="screen-card__thumb"><div class="screen-card__thumb-inner"><div class="thumb-bar"></div><div style="margin:12px auto;width:28px;height:28px;border-radius:50%;background:#e85d4c"></div></div></div>
+          <div class="screen-card__meta"><h3>02d 伙伴资料</h3><p>从消息列表头像进入</p></div>
+        </a>
+        <a class="screen-card" href="screens/chat.html">
+          <div class="screen-card__thumb"><div class="screen-card__thumb-inner"><div class="thumb-bar"></div><div style="margin:8px;width:50%;height:10px;border-radius:6px;background:#fff;border:1px solid rgba(0,0,0,.06)"></div><div style="margin:4px 8px 8px auto;width:45%;height:10px;border-radius:6px;background:#d94432"></div></div></div>
+          <div class="screen-card__meta"><h3>03 聊天详情</h3><p>与 Sarah 的消息流</p></div>
+        </a>
+        <a class="screen-card" href="screens/incoming-call.html">
+          <div class="screen-card__thumb screen-card__thumb--call"><div class="screen-card__thumb-inner screen-card__thumb-inner--dark"><div class="thumb-bar thumb-bar--dark"></div><div style="margin:16px auto;width:32px;height:32px;border-radius:50%;background:#e85d4c"></div></div></div>
+          <div class="screen-card__meta"><h3>04 来电</h3><p>CallKit 参考</p></div>
+        </a>
+        <a class="screen-card" href="screens/active-call.html">
+          <div class="screen-card__thumb screen-card__thumb--call"><div class="screen-card__thumb-inner screen-card__thumb-inner--dark"><div class="thumb-bar thumb-bar--dark"></div><div style="margin:12px auto;width:36px;height:36px;border-radius:50%;background:#e85d4c"></div><div style="margin:8px auto;width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.3)"></div></div></div>
+          <div class="screen-card__meta"><h3>05 通话中</h3><p>TRTC 实时语音</p></div>
+        </a>
+        <a class="screen-card" href="screens/feedback.html">
+          <div class="screen-card__thumb"><div class="screen-card__thumb-inner"><div class="thumb-bar"></div><div class="thumb-panel"><div class="thumb-line" style="margin-bottom:4px"></div><div class="thumb-line thumb-line--short"></div></div></div></div>
+          <div class="screen-card__meta"><h3>06 学习反馈</h3><p>语法 + 应掌握单词</p></div>
+        </a>
+        <a class="screen-card" href="screens/learn.html">
+          <div class="screen-card__thumb"><div class="screen-card__thumb-inner"><div class="thumb-bar"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:6px"><div style="height:20px;border-radius:4px;background:#fdebe8"></div><div style="height:20px;border-radius:4px;background:#fff;border:1px solid rgba(0,0,0,.06)"></div></div></div></div>
+          <div class="screen-card__meta"><h3>07 学习</h3><p>今日数据与常见错误</p></div>
+        </a>
+        <a class="screen-card" href="screens/moments.html">
+          <div class="screen-card__thumb"><div class="screen-card__thumb-inner"><div class="thumb-bar"></div><div class="thumb-panel"><div class="thumb-row"><span class="thumb-dot" style="background:#e85d4c"></span><span class="thumb-line thumb-line--short"></span></div><div style="height:16px;margin-top:4px;border-radius:4px;background:#fdebe8;border-left:2px solid #e85d4c"></div></div></div></div>
+          <div class="screen-card__meta"><h3>08 朋友圈</h3><p>学习 + 单词 + 伙伴生活日常</p></div>
+        </a>
+        <a class="screen-card" href="screens/profile.html">
+          <div class="screen-card__thumb"><div class="screen-card__thumb-inner"><div class="thumb-bar"></div><div class="thumb-hero" style="height:28px;margin:8px"></div></div></div>
+          <div class="screen-card__meta"><h3>09 我的</h3><p>偏好、外观、额度</p></div>
+        </a>
+        <a class="screen-card" href="screens/wallet.html">
+          <div class="screen-card__thumb"><div class="screen-card__thumb-inner"><div class="thumb-bar"></div><div class="thumb-hero" style="height:36px;margin:10px"></div></div></div>
+          <div class="screen-card__meta"><h3>10 充值</h3><p>StoreKit 额度包</p></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="hub-section">
+      <h2>素材 Assets</h2>
+      <p style="font-size:var(--text-sm);margin-bottom:var(--space-4)">
+        SVG 图标内联于各 screen（无独立 icons 目录）、伙伴头像、朋友圈配图。目录 <code>design/assets/</code> · 清单见 <a href="assets/README.md">assets/README.md</a>
+      </p>
+      <div class="assets-grid">
+        <div class="assets-grid__item"><span class="assets-grid__icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="assets-grid__label">消息</span></div>
+        <div class="assets-grid__item"><span class="assets-grid__icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg></span><span class="assets-grid__label">朋友圈</span></div>
+        <div class="assets-grid__item"><span class="assets-grid__icon-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span class="assets-grid__label">添加</span></div>
+        <div class="assets-grid__item assets-grid__item--avatar"><img src="assets/avatars/avatar-sarah.png" alt="" /><span class="assets-grid__label">Sarah</span></div>
+        <div class="assets-grid__item assets-grid__item--avatar"><img src="assets/avatars/avatar-alex.png" alt="" /><span class="assets-grid__label">Alex</span></div>
+        <div class="assets-grid__item assets-grid__item--avatar"><img src="assets/avatars/avatar-emma.png" alt="" /><span class="assets-grid__label">Emma</span></div>
+        <div class="assets-grid__item assets-grid__item--logo"><img src="assets/brand/callie-logo.png" alt="Callie logo" /><span class="assets-grid__label">Logo</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-top:var(--space-4)">
+        <img src="assets/images/moments/moment-sarah-park.jpg" alt="Sarah park" style="width:100%;border-radius:12px;aspect-ratio:16/10;object-fit:cover" />
+        <img src="assets/images/moments/moment-emma-kitchen.jpg" alt="Emma kitchen" style="width:100%;border-radius:12px;aspect-ratio:16/10;object-fit:cover" />
+        <img src="assets/images/moments/moment-alex-flight.jpg" alt="Alex flight" style="width:100%;border-radius:12px;aspect-ratio:16/10;object-fit:cover" />
+      </div>
+    </section>
+
+    <section class="hub-section">
+      <h2>文档</h2>
+      <p style="font-size:var(--text-sm)">
+        Coding Agent 请阅读 <strong>docs/design.md</strong>。iOS 真机 Dark Mode 跟随系统；HTML 用 <code>.device[data-theme]</code> 预览。
+      </p>
+    </section>
+  </div>
+  <script src="js/preview-theme.js"></script>
+</body>
+</html>

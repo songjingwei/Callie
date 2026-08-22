@@ -7,6 +7,7 @@
 ```text
 Callie/
 ├── apps/          # 代码（待建：ios、api）
+├── design/        # HTML 设计稿与设计系统
 ├── supabase/      # 数据库迁移（待建）
 ├── docs/          # 产品 & 工程文档（Obsidian vault）
 └── README.md
@@ -18,7 +19,9 @@ Callie/
 |------|------|
 | [docs/prd.md](./docs/prd.md) | 产品需求 |
 | [docs/architecture.md](./docs/architecture.md) | **系统架构图** |
+| [docs/design.md](./docs/design.md) | **UI 设计规范**（Coding Agent） |
 | [docs/project-architecture-and-tech-stack.md](./docs/project-architecture-and-tech-stack.md) | 工程拆分与技术栈 |
+| [design/index.html](./design/index.html) | **HTML 设计稿原型** |
 
 ## Obsidian
 

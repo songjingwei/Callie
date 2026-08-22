@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="screen-chrome">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Callie — Sarah 资料</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/assets.css" />
+</head>
+<body class="screen-page">
+  <nav class="screen-page__nav"><a class="link-back" href="messages.html">← 消息</a></nav>
+  <div class="screen-page__toolbar">
+    <div class="theme-toggle" role="group" aria-label="设备主题">
+      <button type="button" class="theme-toggle__btn theme-toggle__btn--active" data-theme-btn="light">Light</button>
+      <button type="button" class="theme-toggle__btn" data-theme-btn="dark">Dark</button>
+    </div>
+  </div>
+  <div class="device" data-theme="light">
+    <div class="device__island"></div>
+    <div class="device__screen">
+      <div class="device__status device__status--light"><span>9:41</span><span>5G</span></div>
+      <div class="device__content">
+        <div class="page page--rich">
+          <header class="nav-bar" style="padding-top:var(--space-2)">
+            <a class="nav-bar__back" href="messages.html">消息</a>
+            <span class="nav-bar__title">伙伴资料</span>
+            <span class="nav-bar__action">···</span>
+          </header>
+
+          <div class="profile-hero">
+            <img class="avatar-img avatar-img--2xl" src="../assets/avatars/avatar-sarah.png" alt="Sarah" />
+            <h1 class="profile-hero__name">Sarah</h1>
+            <p class="profile-hero__tagline">美式英语 · 日常口语 · 轻松活泼</p>
+            <div class="chip-group" style="justify-content:center;margin-bottom:var(--space-5)">
+              <span class="tag tag--sarah">当前伙伴</span>
+              <span class="tag tag--neutral">B1–B2</span>
+            </div>
+            <div class="profile-stats">
+              <div>
+                <div class="profile-stat__value">12</div>
+                <div class="profile-stat__label">通话次数</div>
+              </div>
+              <div>
+                <div class="profile-stat__value">48m</div>
+                <div class="profile-stat__label">练习时长</div>
+              </div>
+              <div>
+                <div class="profile-stat__value">在线</div>
+                <div class="profile-stat__label">状态</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="page-body">
+            <div class="list-group">
+              <div class="list-cell">
+                <span class="list-cell__label">擅长场景</span>
+                <span class="list-cell__value">日常闲聊</span>
+              </div>
+              <div class="list-cell">
+                <span class="list-cell__label">口音</span>
+                <span class="list-cell__value">美式</span>
+              </div>
+              <div class="list-cell">
+                <span class="list-cell__label">纠错风格</span>
+                <span class="list-cell__value">通话后反馈</span>
+              </div>
+            </div>
+
+            <p style="font-size:var(--text-sm);color:var(--color-text-secondary);line-height:var(--leading-relaxed);margin-bottom:var(--space-4)">
+              像美国朋友一样聊天，适合初中级用户。Sarah 会记住你的兴趣和常见错误，并在通话后整理学习反馈。
+            </p>
+
+            <a href="chat.html" class="btn btn--primary" style="margin-bottom:var(--space-3);display:flex">发消息</a>
+            <button class="btn btn--secondary" type="button">语音通话</button>
+          </div>
+        </div>
+      </div>
+      <div class="device__home-indicator device__home-indicator--dark"></div>
+    </div>
+  </div>
+  <p class="screen-page__label">02d · Partner Profile — 消息列表点头像进入</p>
+  <script src="../js/preview-theme.js"></script>
+</body>
+</html>

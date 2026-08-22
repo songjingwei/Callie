@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="screen-chrome">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Callie — Onboarding</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/assets.css" />
+</head>
+<body class="screen-page">
+  <nav class="screen-page__nav"><a class="link-back" href="../index.html">← Design System</a></nav>
+  <div class="screen-page__toolbar">
+    <div class="theme-toggle" role="group" aria-label="设备主题">
+      <button type="button" class="theme-toggle__btn theme-toggle__btn--active" data-theme-btn="light">Light</button>
+      <button type="button" class="theme-toggle__btn" data-theme-btn="dark">Dark</button>
+    </div>
+  </div>
+  <div class="device" data-theme="light">
+    <div class="device__island"></div>
+    <div class="device__screen">
+      <div class="device__status device__status--light"><span>9:41</span><span>5G</span></div>
+      <div class="device__content">
+        <div class="onboarding">
+          <img class="onboarding__illustration" src="../assets/illustrations/onboarding-hero.svg" alt="" />
+          <div class="onboarding__hero">
+            <img class="onboarding__logo" src="../assets/brand/callie-logo.png" alt="Callie" width="72" height="72" />
+            <h1 class="onboarding__headline">让学习主动来找你</h1>
+            <p class="onboarding__desc">
+              不是打开 App 才学习。你的 AI 语言伙伴会在合适的时间打来语音电话，像和朋友聊天一样练外语。
+            </p>
+          </div>
+          <div class="onboarding__dots">
+            <span class="onboarding__dot onboarding__dot--active"></span>
+            <span class="onboarding__dot"></span>
+            <span class="onboarding__dot"></span>
+          </div>
+          <div class="onboarding__actions">
+            <button class="btn btn--primary" type="button">开始使用</button>
+            <button class="btn btn--secondary" type="button">已有账号，登录</button>
+          </div>
+        </div>
+      </div>
+      <div class="device__home-indicator device__home-indicator--dark"></div>
+    </div>
+  </div>
+  <p class="screen-page__label">01 · Onboarding — 价值主张</p>
+  <script src="../js/preview-theme.js"></script>
+</body>
+</html>

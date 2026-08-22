@@ -201,8 +201,8 @@ MVP 包含：
 
 1.  用户注册/登录
 2.  用户学习档案
-3.  AI 学习伙伴
-4.  IM 首页
+3.  AI 学习伙伴（含添加、资料页）
+4.  IM 首页（右上角「+」、点头像看资料）
 5.  AI 主动来电
 6.  App 内实时语音通话
 7.  AI 实时语音对话
@@ -212,6 +212,8 @@ MVP 包含：
 11. AI 主动联系策略
 12. Push 通知（VoIP Push + CallKit）
 13. **账户余额与 StoreKit 充值**
+14. **朋友圈（AI 学习动态 Feed，只读）**
+15. **Light / Dark 外观（跟随系统）**
 
 **平台范围：仅 iOS。**
 
@@ -233,8 +235,10 @@ Android 等其他平台不在 MVP 范围内。
 ``` text
 App
 ├── 消息
-│   ├── AI 学习伙伴
+│   ├── AI 学习伙伴会话
 │   ├── 系统消息
+│   ├── 添加 AI 伙伴（右上角「+」）
+│   ├── 伙伴资料（点击会话头像）
 │   └── 通话记录
 │
 ├── 学习
@@ -243,16 +247,17 @@ App
 │   ├── 常见错误
 │   └── 学习历史
 │
-├── AI 伙伴
-│   ├── 伙伴列表
-│   ├── 伙伴详情
-│   └── 伙伴设置
+├── 朋友圈
+│   ├── AI 伙伴学习动态 Feed
+│   ├── 表达/纠错/发音卡片
+│   └── 点击头像 → 伙伴资料
 │
 └── 我的
     ├── 学习目标
     ├── 语言水平
     ├── 通话时间
     ├── 通话频率
+    ├── 外观（浅色 / 深色 / 跟随系统）
     ├── 通知设置
     └── 账户设置
 ```
@@ -265,34 +270,114 @@ App
 
 产品首页应尽量接近 IM 产品，而不是传统学习 App。
 
+**布局与交互（对齐微信习惯）：**
+
+- 右上角 **「+」按钮** → 搜索并添加 AI 学习伙伴
+- 会话行 **点击头像** → 进入该伙伴的资料页
+- 会话行 **点击消息区域** → 进入聊天详情
+- 列表置于 **圆角卡片容器** 内，页面背景为暖色渐变（非整页纯白）
+
 示例：
 
 ``` text
-消息
+消息                                    [+]
 
-Sarah
-Hey! Are you free for a quick chat?
-                    2 min ago
+[今日练习 Hero 条 · Sarah 在线]
 
-Alex
-Let's practice your job interview.
-                    Yesterday
-
-Emma
-How was your weekend?
-                    Yesterday
+┌─────────────────────────────┐
+│ (S) Sarah          2 min ago │
+│ Hey! Are you free…           │
+├─────────────────────────────┤
+│ (A) Alex            Yesterday│
+│ Let's practice…              │
+└─────────────────────────────┘
 ```
 
 每个 AI 伙伴都是一个类似微信好友的会话。
 
 展示：
 
--   AI 头像
+-   AI 头像（可点击查看资料）
 -   AI 名称
 -   最近一条消息
 -   最近通话时间
 -   未读状态
 -   在线/可通话状态
+
+## 7.2 朋友圈（第三 Tab）
+
+类似微信朋友圈的信息流，**仅 AI 伙伴发布**。内容分两类，比例建议 **学习 40% · 生活 60%**（避免过于功利）：
+
+### A. 学习类动态
+
+| 类型 | Tag | 说明 |
+|------|-----|------|
+| 今日表达 | 语法/句型 | 通话中常见错误的正确说法 |
+| 单词 | 应掌握词 | 从通话反馈同步的 vocabulary |
+| 商务口语 | 场景句型 | Alex 等人格专属 |
+| 发音 | 音标示范 | Emma 等，可播放 |
+
+**单词动态**：与 §13 学习反馈中的「应掌握单词」同源。通话结束后 LLM 判定用户应掌握的词，写入 feedback，并可选生成一条 Sarah/当前伙伴的朋友圈卡片（`vocab-chips` 形式）。
+
+### B. 生活类动态（人格化）
+
+符合伙伴 **身份、口音、性格** 的日常博文，像真人朋友圈：
+
+- Sarah（美式 · 活泼）：周末咖啡、公园、朋友聚会、旅行随感
+- Alex（商务 · 稳重）：出差、航班、会议间隙、职场感悟
+- Emma（英式 · 温柔）：雨天居家、茶点、城市散步、读书
+
+不要求每条都与学习相关；目的是让用户感到「在跟真人朋友相处」，而非只被教学。
+
+### C. 互动栏（每条动态统一）
+
+每条动态底部固定 **三列互动栏**（见 `MomentActionBar`）：
+
+| 操作 | 图标 | 行为 |
+|------|------|------|
+| **点赞** | 心形 | Toggle；显示计数；已赞高亮品牌色 |
+| **评论** | 气泡 | 打开评论 Sheet，用户用目标语写短评/提问 |
+| **加入复习** | 书本+ | 将本条可复习内容写入复习队列 |
+
+**加入复习** 写入内容：
+
+| 动态类型 | 写入复习队列 |
+|----------|--------------|
+| 单词 | 全部 `vocabulary_items` |
+| 今日表达 / 商务口语 | `MomentPhrase` 英文 + 释义 |
+| 生活 | 提取 1–3 条英文金句（Phase 0 规则；Phase 1+ LLM） |
+
+已加入时按钮变为 **「已加入」** 绿色态，防重复。
+
+**评论**（Phase 0）：
+
+- 用户评论仅面向 **AI 伙伴**，非用户间社交
+- Sheet：输入框 + 发送；评论保存在 `moment_comments`
+- Phase 0：不发 push；伙伴可在后续聊天中提及（Phase 1+）
+- 评论数显示在按钮上（有评论时显示数字，否则显示「评论」）
+
+**点赞**（Phase 0）：本地 + 可选同步 `moment_likes`；虚拟点赞数可叠加展示。
+
+**不支持**：用户发帖、@ 好友、评论楼中楼、转发。
+
+交互：
+
+-   点击伙伴头像 → 伙伴资料页
+-   每条动态均展示：点赞 · 评论 · 加入复习
+-   不支持用户发帖、评论链、@ 好友
+
+内容来源：
+
+-   **学习/单词**：通话结束 `learning_feedback` → 聚合为 moments（Phase 0）
+-   **生活**：人格 prompt + 模板库 + Phase 1+ LLM 定时生成（每周 2–3 条/伙伴）
+
+## 7.3 伙伴资料页
+
+从消息列表或朋友圈点击头像进入。
+
+展示：大头像、人格标签、通话统计、擅长场景、发消息 / 语音通话入口。
+
+添加伙伴：从消息页「+」进入搜索与推荐列表（Phase 0 为 Sarah / Alex / Emma 固定池）。
 
 ------------------------------------------------------------------------
 
@@ -633,6 +718,11 @@ User Learning Profile
 • It turns out that...
 • By the way...
 
+应掌握单词：
+• itinerary  n. 行程     （你用了 travel plan）
+• cuisine    n. 菜肴     （聊日本 food 时可 upgrade）
+• scenic     adj. 风景优美的
+
 需要注意：
 
 ❌ I go to Japan last year.
@@ -645,6 +735,27 @@ User Learning Profile
 词汇       ███████░░░
 语法       ██████░░░░
 ```
+
+### 应掌握单词（Vocabulary to Master）
+
+与语法纠错并列的重要维度。通话结束后，LLM 根据对话分析产出 `vocabulary_items[]`：
+
+| 字段 | 说明 |
+|------|------|
+| `word` | 目标词（英文等） |
+| `definition` | 简短释义（用户母语） |
+| `context` | 本次通话中的原句或替换建议 |
+| `priority` | `suggested` / `optional` — 是否强烈建议掌握 |
+| `reason` | 判定理由：重复简单词、用词错误、等级应升级等 |
+
+**入选规则（Phase 0 启发式，Phase 1+ LLM）**：
+
+- 用户多次使用过于简单的词（如反复 `food` → 建议 `cuisine`）
+- 用户用错词或中式英语
+- 话题核心词用户未能主动使用但等级应掌握
+- 单次通话建议 **3–5 个**，避免变成单词 APP
+
+**同步**：`vocabulary_items` 写入 `learning_feedback`，并可为当前伙伴生成一条 **朋友圈·单词** 动态（见 §7.2）。
 
 注意：
 
@@ -685,6 +796,7 @@ Travel
 -   学习反馈
 -   错误记录
 -   新词/表达
+-   **应掌握单词**（vocabulary_items）
 -   AI 总结
 
 MVP 可暂不保存完整录音，是否保存录音需要结合隐私和用户授权进一步设计。
@@ -805,21 +917,24 @@ MVP 优先实现：
 
 -   AI 会话列表
 -   AI 会话详情
+-   **添加 AI 伙伴**（消息页右上角「+」，搜索/推荐）
+-   **伙伴资料页**（点击会话头像）
 -   AI 文字消息
 -   AI 语音通话
 -   通话记录
 -   未读状态
 -   Push
+-   **朋友圈（只读）**：AI 伙伴发布语言学习动态
 
 ## 暂不支持
 
 -   用户之间聊天
 -   群聊
 -   文件
--   图片
+-   图片消息（Phase 0）
 -   视频通话
--   朋友圈
--   社交关系
+-   用户发朋友圈 / 评论社交链
+-   用户之间社交关系
 
 核心原则：
 
@@ -989,8 +1104,41 @@ learning_feedback
 ├── vocabulary_score
 ├── grammar_score
 ├── pronunciation_score
+├── vocabulary_items    -- JSON: VocabItem[]
 ├── summary
 └── ...
+
+-- 朋友圈（Phase 0）
+moment_posts
+├── id
+├── partner_id
+├── kind                -- life | vocabulary | expression | scenario | pronunciation
+├── body
+├── payload_json        -- phrase / vocabulary / media_url
+├── like_count          -- 展示用（含虚拟基数）
+├── comment_count
+└── created_at
+
+moment_likes
+├── user_id
+├── moment_id
+└── created_at
+
+moment_comments
+├── id
+├── user_id
+├── moment_id
+├── text
+└── created_at
+
+review_items
+├── id
+├── user_id
+├── source_type         -- moment | call_feedback
+├── source_id
+├── item_type           -- vocabulary | expression | phrase
+├── payload_json
+└── created_at
 
 learning_mistakes
 ├── id

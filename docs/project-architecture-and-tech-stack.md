@@ -325,8 +325,8 @@ SwiftData（本地缓存，可选）
 
 基础能力：
 
-- Tab 导航（消息 / 学习 / AI 伙伴 / 我的）
-- 主题与 Design System（颜色、字体、间距）
+- Tab 导航（消息 / 学习 / **朋友圈** / 我的）
+- 主题与 Design System（**Light + Dark**、渐变背景、卡片层次）
 - 网络层封装（Supabase JWT、Workers API Base URL）
 - 环境配置（Dev / Staging / Prod）
 - Phase 0 不上 Sentry / PostHog（有收入后再加）
@@ -365,12 +365,62 @@ Phase 0 做**简化版**：会话列表 + 通话记录，不做完整 Realtime I
 核心能力（Phase 0）：
 
 - AI 伙伴会话列表（本地 + 少量云端元数据）
+- **添加 AI 伙伴**（消息页「+」→ 搜索/推荐 sheet）
+- **伙伴资料页**（点击会话头像 push）
 - 通话记录展示
 - 未读状态（本地）
 
 Phase 1+ 再补：
 
 - 消息分页、实时消息、已读同步
+
+---
+
+# 7b. 03b — Moments（朋友圈）
+
+Phase 0 Feed，AI 伙伴发布。**学习 + 生活** 混合；每条动态底部 **MomentActionBar**。
+
+## 视图
+
+- `MomentsFeedView` — 第三 Tab
+- `MomentCommentSheet` — 评论输入（半屏 Sheet）
+- 点头像 → `PartnerProfileView`
+
+## 互动（Phase 0）
+
+| 动作 | 客户端 | 存储 |
+|------|--------|------|
+| 点赞 | Toggle + 动画 | `moment_likes` 或 SwiftData 本地 |
+| 评论 | Sheet → POST | `moment_comments` |
+| 加入复习 | 写入队列 + Toast | `review_items`（关联 `moment_id`） |
+
+```text
+review_items
+├── id
+├── user_id
+├── source_type     # moment | call_feedback
+├── source_id
+├── item_type       # vocabulary | expression | phrase
+├── payload_json    # VocabItem / MomentPhrase
+└── created_at
+```
+
+## API（Phase 0 可选，可先纯本地）
+
+```text
+GET  /v1/moments              # Feed 分页
+POST /v1/moments/:id/like     # 点赞 toggle
+POST /v1/moments/:id/comments # { text }
+POST /v1/moments/:id/review   # 加入复习队列
+GET  /v1/review-items         # 学习 Tab「待复习」读取
+```
+
+Phase 1+ 评论可触发伙伴在 IM 中回复。
+
+## 内容来源
+
+- **学习/单词**：`learning_feedback` 聚合
+- **生活**：persona 模板 + Phase 1+ LLM 定时生成
 
 技术栈：
 

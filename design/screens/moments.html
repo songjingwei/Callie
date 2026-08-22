@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="screen-chrome">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Callie — 朋友圈</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/assets.css" />
+</head>
+<body class="screen-page">
+  <nav class="screen-page__nav"><a class="link-back" href="../index.html">← Design System</a></nav>
+  <div class="screen-page__toolbar">
+    <div class="theme-toggle" role="group" aria-label="设备主题">
+      <button type="button" class="theme-toggle__btn theme-toggle__btn--active" data-theme-btn="light">Light</button>
+      <button type="button" class="theme-toggle__btn" data-theme-btn="dark">Dark</button>
+    </div>
+  </div>
+  <div class="device" data-theme="light">
+    <div class="device__island"></div>
+    <div class="device__screen">
+      <div class="device__status device__status--light"><span>9:41</span><span>5G</span></div>
+      <div class="device__content device__content--with-tab">
+        <div class="page page--rich">
+          <header class="page-header page-header--large">
+            <h1 class="page-title">朋友圈</h1>
+            <p class="page-subtitle">学习动态 · 单词积累 · 伙伴日常</p>
+          </header>
+
+          <div class="moments-feed">
+            <article class="moment-card">
+              <header class="moment-card__header">
+                <a href="partner-profile.html"><img class="avatar-img avatar-img--sm" src="../assets/avatars/avatar-sarah.png" alt="Sarah" /></a>
+                <div class="moment-card__meta">
+                  <div class="moment-card__name">Sarah</div>
+                  <div class="moment-card__time">1 小时前</div>
+                </div>
+                <span class="tag tag--life">日常</span>
+              </header>
+              <p class="moment-card__body moment-card__body--life">
+                Perfect fall morning — grabbed an oat latte and walked around the park. The leaves are INSANE right now 🍂<br><br>
+                Sometimes you just need a slow morning before a busy week. How's your weekend looking?
+              </p>
+              <img class="moment-card__photo" src="../assets/images/moments/moment-sarah-park.jpg" alt="Golden Gate Park · 周末随拍" />
+              <footer class="moment-actions" role="group" aria-label="动态互动">
+                <button type="button" class="moment-action moment-action--liked" aria-pressed="true" aria-label="已点赞 24">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <span class="moment-action__label">24</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="评论">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <span class="moment-action__label">评论</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="加入复习">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 7v6"/><path d="M9 10h6"/></svg>
+                  <span class="moment-action__label">复习</span>
+                </button>
+              </footer>
+            </article>
+
+            <article class="moment-card">
+              <header class="moment-card__header">
+                <a href="partner-profile.html"><img class="avatar-img avatar-img--sm" src="../assets/avatars/avatar-sarah.png" alt="Sarah" /></a>
+                <div class="moment-card__meta">
+                  <div class="moment-card__name">Sarah</div>
+                  <div class="moment-card__time">3 小时前</div>
+                </div>
+                <span class="tag tag--vocab">单词</span>
+              </header>
+              <p class="moment-card__body">
+                刚才和你聊日本旅行时，这几个词值得记一下 —— 下次别再说 travel plan 啦 😄
+              </p>
+              <div class="vocab-chips" style="margin-bottom:var(--space-3)">
+                <span class="vocab-chip"><span class="vocab-chip__word">itinerary</span><span class="vocab-chip__def">行程</span></span>
+                <span class="vocab-chip"><span class="vocab-chip__word">cuisine</span><span class="vocab-chip__def">菜肴</span></span>
+                <span class="vocab-chip"><span class="vocab-chip__word">scenic</span><span class="vocab-chip__def">风景优美的</span></span>
+              </div>
+              <footer class="moment-actions" role="group" aria-label="动态互动">
+                <button type="button" class="moment-action" aria-pressed="false" aria-label="点赞">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <span class="moment-action__label">12</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="评论">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <span class="moment-action__label">评论</span>
+                </button>
+                <button type="button" class="moment-action moment-action--review-added" aria-label="已加入复习">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 7v6"/><path d="M9 10h6"/></svg>
+                  <span class="moment-action__label">已加入</span>
+                </button>
+              </footer>
+            </article>
+
+            <article class="moment-card">
+              <header class="moment-card__header">
+                <a href="partner-profile.html"><img class="avatar-img avatar-img--sm" src="../assets/avatars/avatar-sarah.png" alt="Sarah" /></a>
+                <div class="moment-card__meta">
+                  <div class="moment-card__name">Sarah</div>
+                  <div class="moment-card__time">昨天</div>
+                </div>
+                <span class="tag tag--sarah">今日表达</span>
+              </header>
+              <p class="moment-card__body">
+                look forward to 后面要接动名词 —— 今天好几个人说 <strong>forward to go</strong>，来记一下 👇
+              </p>
+              <div class="moment-card__phrase moment-card__phrase--sarah">
+                <div class="moment-card__phrase-en">I'm looking forward to <em>going</em>.</div>
+                <div class="moment-card__phrase-zh">look forward to + doing</div>
+              </div>
+              <footer class="moment-actions" role="group" aria-label="动态互动">
+                <button type="button" class="moment-action moment-action--liked" aria-pressed="true" aria-label="已点赞 86">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <span class="moment-action__label">86</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="评论 3 条">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <span class="moment-action__label">3</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="加入复习">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 7v6"/><path d="M9 10h6"/></svg>
+                  <span class="moment-action__label">复习</span>
+                </button>
+              </footer>
+            </article>
+
+            <article class="moment-card">
+              <header class="moment-card__header">
+                <a href="partner-profile.html?partner=alex"><img class="avatar-img avatar-img--sm" src="../assets/avatars/avatar-alex.png" alt="Alex" /></a>
+                <div class="moment-card__meta">
+                  <div class="moment-card__name">Alex</div>
+                  <div class="moment-card__time">昨天</div>
+                </div>
+                <span class="tag tag--life">日常</span>
+              </header>
+              <p class="moment-card__body moment-card__body--life">
+                Red-eye flight to NYC. Coffee #3 and still not fully awake.<br><br>
+                Pro tip: always pack a spare shirt in your carry-on. Learned that the hard way. ✈️
+              </p>
+              <img class="moment-card__photo" src="../assets/images/moments/moment-alex-flight.jpg" alt="Flight window · dawn" />
+              <footer class="moment-actions" role="group" aria-label="动态互动">
+                <button type="button" class="moment-action" aria-pressed="false" aria-label="点赞">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <span class="moment-action__label">41</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="评论">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <span class="moment-action__label">评论</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="加入复习">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 7v6"/><path d="M9 10h6"/></svg>
+                  <span class="moment-action__label">复习</span>
+                </button>
+              </footer>
+            </article>
+
+            <article class="moment-card">
+              <header class="moment-card__header">
+                <a href="partner-profile.html?partner=alex"><img class="avatar-img avatar-img--sm" src="../assets/avatars/avatar-alex.png" alt="Alex" /></a>
+                <div class="moment-card__meta">
+                  <div class="moment-card__name">Alex</div>
+                  <div class="moment-card__time">2 天前</div>
+                </div>
+                <span class="tag tag--alex">商务口语</span>
+              </header>
+              <p class="moment-card__body">
+                面试 weakness 题：别只甩 "I'm a perfectionist"。这个结构更真诚：
+              </p>
+              <div class="moment-card__phrase moment-card__phrase--alex">
+                <div class="moment-card__phrase-en">One area I'm working on is…, and I've been… to improve.</div>
+                <div class="moment-card__phrase-zh">承认不足 + 具体改进行动</div>
+              </div>
+              <footer class="moment-actions" role="group" aria-label="动态互动">
+                <button type="button" class="moment-action moment-action--liked" aria-pressed="true" aria-label="已点赞 128">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <span class="moment-action__label">128</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="评论">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <span class="moment-action__label">评论</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="加入复习">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 7v6"/><path d="M9 10h6"/></svg>
+                  <span class="moment-action__label">复习</span>
+                </button>
+              </footer>
+            </article>
+
+            <article class="moment-card">
+              <header class="moment-card__header">
+                <a href="partner-profile.html?partner=emma"><img class="avatar-img avatar-img--sm" src="../assets/avatars/avatar-emma.png" alt="Emma" /></a>
+                <div class="moment-card__meta">
+                  <div class="moment-card__name">Emma</div>
+                  <div class="moment-card__time">3 天前</div>
+                </div>
+                <span class="tag tag--life">日常</span>
+              </header>
+              <p class="moment-card__body moment-card__body--life">
+                Rainy afternoon in London. Made scones (slightly burnt, but the jam saved it).<br><br>
+                There's something lovely about staying in when it's pouring outside. ☔🫖
+              </p>
+              <img class="moment-card__photo" src="../assets/images/moments/moment-emma-kitchen.jpg" alt="Kitchen window · 雨天" />
+              <footer class="moment-actions" role="group" aria-label="动态互动">
+                <button type="button" class="moment-action" aria-pressed="false" aria-label="点赞">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <span class="moment-action__label">67</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="评论">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <span class="moment-action__label">评论</span>
+                </button>
+                <button type="button" class="moment-action" aria-label="加入复习">
+                  <svg class="moment-action__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 7v6"/><path d="M9 10h6"/></svg>
+                  <span class="moment-action__label">复习</span>
+                </button>
+              </footer>
+            </article>
+          </div>
+        </div>
+      </div>
+      <nav class="tab-bar">
+        <span class="tab-bar__item"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>消息</span>
+        <span class="tab-bar__item"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>学习</span>
+        <span class="tab-bar__item tab-bar__item--active"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>朋友圈</span>
+        <span class="tab-bar__item"><svg class="tab-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>我的</span>
+      </nav>
+      <div class="device__home-indicator device__home-indicator--dark"></div>
+    </div>
+  </div>
+  <p class="screen-page__label">08 · Moments — 统一点赞 / 评论 / 加入复习互动栏</p>
+  <script src="../js/preview-theme.js"></script>
+</body>
+</html>

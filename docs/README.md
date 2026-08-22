@@ -6,7 +6,10 @@
 
 - [prd.md](./prd.md) — 产品需求（PRD）
 - [architecture.md](./architecture.md) — **系统架构图**（含 §15 OpenAI / Anthropic 两种 LlmProvider）
+- [design.md](./design.md) — **UI 设计规范**（Token、组件、SwiftUI 映射）
 - [project-architecture-and-tech-stack.md](./project-architecture-and-tech-stack.md) — 工程拆分与技术栈
+
+HTML 交互原型在仓库根目录 [`design/`](../design/)（非 Obsidian vault 内）。
 
 ## 在 Obsidian 中打开
 

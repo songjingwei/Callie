@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="screen-chrome">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Callie — 充值</title>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+</head>
+<body class="screen-page">
+  <nav class="screen-page__nav"><a class="link-back" href="../index.html">← Design System</a></nav>
+  <div class="screen-page__toolbar">
+    <div class="theme-toggle" role="group" aria-label="设备主题">
+      <button type="button" class="theme-toggle__btn theme-toggle__btn--active" data-theme-btn="light">Light</button>
+      <button type="button" class="theme-toggle__btn" data-theme-btn="dark">Dark</button>
+    </div>
+  </div>
+  <div class="device" data-theme="light">
+    <div class="device__island"></div>
+    <div class="device__screen">
+      <div class="device__status device__status--light"><span>9:41</span><span>5G</span></div>
+      <div class="device__content">
+        <nav class="nav-bar">
+          <a class="nav-bar__back" href="profile.html">我的</a>
+          <span class="nav-bar__title">充值通话额度</span>
+          <span class="nav-bar__action"></span>
+        </nav>
+        <div class="page-body">
+          <p style="font-size:var(--text-sm);color:var(--color-text-secondary);margin-bottom:var(--space-5)">
+            通过 App Store 购买消耗型额度包。通话按实际时长扣减，挂断后结算。
+          </p>
+
+          <div class="package-list">
+            <div class="package-card">
+              <div>
+                <div class="package-card__minutes">30 分钟</div>
+                <div class="package-card__price">¥18</div>
+              </div>
+            </div>
+            <div class="package-card package-card--selected">
+              <div>
+                <div class="package-card__minutes">120 分钟</div>
+                <div class="package-card__price">¥58</div>
+                <div class="package-card__badge">推荐 · 省 20%</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn--primary" type="button" style="margin-top:var(--space-6)">通过 App Store 购买</button>
+          <p style="font-size:var(--text-xs);color:var(--color-text-tertiary);text-align:center;margin-top:var(--space-4);line-height:var(--leading-relaxed)">
+            购买即表示同意服务条款。额度不可转让，退款遵循 Apple 政策。
+          </p>
+        </div>
+      </div>
+      <div class="device__home-indicator device__home-indicator--dark"></div>
+    </div>
+  </div>
+  <p class="screen-page__label">10 · Wallet — StoreKit IAP（PRD §20.2）</p>
+  <script src="../js/preview-theme.js"></script>
+</body>
+</html>
