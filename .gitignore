@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+
+# Obsidian（个人会话状态，不提交）
+docs/.obsidian/workspace.json
+docs/.obsidian/workspace-mobile.json
+
+# Node / Workers（apps/api）
+node_modules/
+.wrangler/
+.dev.vars
+.env
+.env.*
+
+# iOS（apps/ios）
+apps/ios/**/DerivedData/
+apps/ios/**/*.xcuserstate
+apps/ios/**/xcuserdata/
+apps/ios/**/.swiftpm/
+
+# Python（apps/voice-agent）
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Secrets
+*.p8
+*.pem
